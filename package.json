@@ -1,0 +1,11 @@
+{
+  "name": "palette-picker",
+  "version": "1.0.0",
+  "description": "palette picker application made with node/express/knex and postgresql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gray Smith",
+  "license": "ISC"
+}
