@@ -1,6 +1,23 @@
+let currentPalette = [
+  { hexValue: '#a469de', locked: false },
+  { hexValue: '#714e4f', locked: false },
+  { hexValue: '#62c9e0', locked: false },
+  { hexValue: '#551613', locked: false },
+  { hexValue: '#2ecce5', locked: false }
+];
+
 $('.generate-palette').on('click', () => {
-  alert('hey there');
+  const newPalette = generateNewPalette(currentPalette);
+  displayPalette(newPalette);
 });
+
+displayPalette = palette => {
+  palette.map((color, i) => {
+    $(`.color-${i}`).style.backgroundColor = color.hexValue;
+  });
+};
+
+displayPalette(currentPalette);
 
 class Color {
   constructor() {
@@ -11,14 +28,6 @@ class Color {
   }
 }
 
-let currentPalette = [
-  { hexValue: '#a469de', locked: false },
-  { hexValue: '#714e4f', locked: false },
-  { hexValue: '#62c9e0', locked: false },
-  { hexValue: '#551613', locked: false },
-  { hexValue: '#2ecce5', locked: false }
-];
-
 const generateNewPalette = currentPalette => {
   const newPalette = currentPalette.map(color => {
     if (color.locked) {
@@ -27,7 +36,6 @@ const generateNewPalette = currentPalette => {
       return new Color();
     }
   });
-  currentPalette = newPalette;
   return newPalette;
 };
 

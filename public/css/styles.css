@@ -22,3 +22,8 @@ body {
 
 .main-content {
 }
+
+.main-palette-color {
+  height: 200px;
+  width: 100px;
+}
