@@ -1,12 +1,6 @@
-// window.onload = function() {
-//   if (window.jQuery) {
-//     // jQuery is loaded
-//     alert('Yeah!');
-//   } else {
-//     // jQuery is not loaded
-//     alert("Doesn't Work");
-//   }
-// };
+$('.generate-palette').on('click', () => {
+  alert('hey there');
+});
 
 class Color {
   constructor() {
@@ -17,7 +11,7 @@ class Color {
   }
 }
 
-const colors = [
+let currentPalette = [
   { hexValue: '#a469de', locked: false },
   { hexValue: '#714e4f', locked: false },
   { hexValue: '#62c9e0', locked: false },
@@ -25,25 +19,31 @@ const colors = [
   { hexValue: '#2ecce5', locked: false }
 ];
 
-const generateNewPalette = colors => {
-  const newPalette = colors.map(color => {
+const generateNewPalette = currentPalette => {
+  const newPalette = currentPalette.map(color => {
     if (color.locked) {
       return color;
     } else {
       return new Color();
     }
   });
+  currentPalette = newPalette;
   return newPalette;
 };
 
-const createProject = name => {
-  fetch('http://localhost:3000/api/v1/projects', {
+const createProject = async name => {
+  const newProject = {
+    name
+  };
+  const response = fetch('http://localhost:3000/api/v1/projects', {
     method: 'POST',
-    body: name,
+    body: JSON.stringify(newProject),
     headers: {
       'Content-Type': 'application/json'
     }
   });
+
+  return response;
 };
 
-console.log(generateNewPalette(colors));
+const addPaletteToProject = (projectId, palette) => {};
