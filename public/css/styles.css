@@ -1,3 +1,24 @@
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
   background-color: crimson;
+}
+
+.page-container {
+  display: flex;
+}
+
+.file-tree {
+  background-color: paleturquoise;
+  width: 14rem;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.main-content {
 }
