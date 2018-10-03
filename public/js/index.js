@@ -14,7 +14,29 @@ $('.generate-palette').on('click', () => {
 displayPalette = palette => {
   palette.map((color, i) => {
     $(`.color-${i}`).style.backgroundColor = color.hexValue;
+    $(`.color-${i}`).innerHTML = `
+      <i class="fas fa-lock${color.locked ? '' : '-open'}" data-index=${i}></i>
+      <p>${color.hexValue}</p>
+    `;
   });
+};
+
+$$('.main-palette-color').on('click', e => {
+  toggleLock(e);
+});
+
+toggleLock = e => {
+  if (e.target.classList.contains('fa-lock-open')) {
+    e.target.classList.remove('fa-lock-open');
+    e.target.classList.add('fa-lock');
+    const index = e.target.dataset.index;
+    currentPalette[index].locked = true;
+  } else if (e.target.classList.contains('fa-lock')) {
+    e.target.classList.remove('fa-lock');
+    e.target.classList.add('fa-lock-open');
+    const index = e.target.dataset.index;
+    currentPalette[index].locked = false;
+  }
 };
 
 displayPalette(currentPalette);
@@ -28,14 +50,15 @@ class Color {
   }
 }
 
-const generateNewPalette = currentPalette => {
-  const newPalette = currentPalette.map(color => {
+const generateNewPalette = palette => {
+  const newPalette = palette.map(color => {
     if (color.locked) {
       return color;
     } else {
       return new Color();
     }
   });
+  currentPalette = newPalette;
   return newPalette;
 };
 
