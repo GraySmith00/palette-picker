@@ -19,6 +19,17 @@ body {
   overflow: scroll;
 }
 
+.project-item {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.project-item i {
+  margin-right: 1rem;
+  font-size: 0.8rem;
+}
+
 .main-content {
   display: flex;
   flex-direction: column;
