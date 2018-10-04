@@ -1,21 +1,9 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
 const bodyParser = require('body-parser');
 
-// Cors
-app.use(
-  cors({
-    allowedOrigins: ['localhost:3000']
-  })
-);
-var corsOption = {
-  origin: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  exposedHeaders: ['x-auth-token']
-};
-app.use(cors(corsOption));
+// use static assets
+app.use(express.static('public'));
 
 // bodyParser
 app.use(bodyParser.urlencoded({ extended: false }));
