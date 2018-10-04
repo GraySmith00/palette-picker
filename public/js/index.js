@@ -62,11 +62,11 @@ const generateNewPalette = palette => {
   return newPalette;
 };
 
-$('.add-project-form').on('submit', function(e) {
+$('.add-project-form').on('submit', async function(e) {
   e.preventDefault();
   const name = $('.project-name-input').value;
-  createProject(name);
-  displayProject(name);
+  const project = await createProject(name);
+  displayProject(project);
   this.reset();
 });
 
@@ -74,23 +74,34 @@ const createProject = async name => {
   const newProject = {
     name
   };
-  const response = fetch('http://localhost:3000/api/v1/projects', {
+  const response = await fetch('http://localhost:3000/api/v1/projects', {
     method: 'POST',
     body: JSON.stringify(newProject),
     headers: {
       'Content-Type': 'application/json'
     }
   });
-
-  return response;
+  const id = await response.json();
+  const project = { ...id, name };
+  return project;
 };
 
-const displayProject = name => {
+const displayProject = project => {
   const projectDiv = document.createElement('div');
   projectDiv.setAttribute('class', 'project-item');
+  projectDiv.setAttribute('data-index', project.id);
   projectDiv.innerHTML = `
     <i class="fas fa-plus"></i>
-    <p>${name}</p>
+    <p>${project.name}</p>
   `;
   $('.file-tree').prepend(projectDiv);
 };
+
+const populateProjects = async () => {
+  const url = 'http://localhost:3000/api/v1/projects';
+  const response = await fetch(url);
+  const projects = await response.json();
+  projects.map(project => displayProject(project));
+};
+
+populateProjects();
