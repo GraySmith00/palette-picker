@@ -62,6 +62,14 @@ const generateNewPalette = palette => {
   return newPalette;
 };
 
+$('.add-project-form').on('submit', function(e) {
+  e.preventDefault();
+  const name = $('.project-name-input').value;
+  createProject(name);
+  displayProject(name);
+  this.reset();
+});
+
 const createProject = async name => {
   const newProject = {
     name
@@ -77,4 +85,12 @@ const createProject = async name => {
   return response;
 };
 
-const addPaletteToProject = (projectId, palette) => {};
+const displayProject = name => {
+  const projectDiv = document.createElement('div');
+  projectDiv.setAttribute('class', 'project-item');
+  projectDiv.innerHTML = `
+    <i class="fas fa-plus"></i>
+    <p>${name}</p>
+  `;
+  $('.file-tree').prepend(projectDiv);
+};
