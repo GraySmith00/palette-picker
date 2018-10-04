@@ -74,7 +74,7 @@ const createProject = async name => {
   const newProject = {
     name
   };
-  const response = await fetch('http://localhost:3000/api/v1/projects', {
+  const response = await fetch('/api/v1/projects', {
     method: 'POST',
     body: JSON.stringify(newProject),
     headers: {
@@ -98,7 +98,7 @@ const displayProject = project => {
 };
 
 const populateProjects = async () => {
-  const url = 'http://localhost:3000/api/v1/projects';
+  const url = '/api/v1/projects';
   const response = await fetch(url);
   const projects = await response.json();
   projects.map(project => displayProject(project));
