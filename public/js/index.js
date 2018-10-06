@@ -20,6 +20,7 @@ displayPalette = palette => {
     `;
   });
 };
+displayPalette(currentPalette);
 
 $$('.main-palette-color').on('click', e => {
   toggleLock(e);
@@ -38,8 +39,6 @@ toggleLock = e => {
     currentPalette[index].locked = false;
   }
 };
-
-displayPalette(currentPalette);
 
 class Color {
   constructor() {
@@ -97,11 +96,24 @@ const displayProject = project => {
   $('.file-tree').prepend(projectDiv);
 };
 
-const populateProjects = async () => {
+const getAllProjects = async () => {
   const url = '/api/v1/projects';
   const response = await fetch(url);
-  const projects = await response.json();
-  projects.map(project => displayProject(project));
+  return await response.json();
 };
 
+const populateProjects = async () => {
+  const projects = await getAllProjects();
+  projects.map(project => {
+    displayProject(project);
+    populateProjectSelect(project);
+  });
+};
 populateProjects();
+
+const populateProjectSelect = project => {
+  const option = document.createElement('option');
+  option.setAttribute('value', project.name.toLowerCase());
+  option.innerHTML = project.name;
+  $('.select-project').appendChild(option);
+};
