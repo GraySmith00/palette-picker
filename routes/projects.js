@@ -6,7 +6,6 @@ const database = require('knex')(configuration);
 
 // get all projects
 router.get('/', (req, res) => {
-  // res.json({ projects: ['proj1', 'proj2'] });
   database('projects')
     .select()
     .then(projects => res.status(200).json(projects))
@@ -42,8 +41,33 @@ router.get('/:id/palettes', (req, res) => {
 });
 
 // post new palette to project
-router.post('/:id/palettes', (req, res) => {
-  res.send('palette post request');
+router.post('/:project_id/palettes/:name', (req, res) => {
+  const colors = req.body.reduce((colors, color, i) => {
+    colors[`color${i}`] = color;
+    return colors;
+  }, {});
+  const newPalette = { ...colors, ...req.params };
+  console.log(newPalette);
+  for (let requiredParam of [
+    'project_id',
+    'name',
+    'color0',
+    'color1',
+    'color2',
+    'color3',
+    'color4'
+  ]) {
+    if (!newPalette[requiredParam]) {
+      return res.status(422).send({
+        error: `Expected format: { title: <String>, author: <String> }. You're missing a "${requiredParam}" property.`
+      });
+    }
+  }
+
+  database('palettes')
+    .insert(newPalette, 'id')
+    .then(palette => res.status(201).json({ id: palette[0] }))
+    .catch(err => res.status(500).json({ err }));
 });
 
 // get individual palette

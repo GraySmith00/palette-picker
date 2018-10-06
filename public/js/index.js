@@ -113,7 +113,27 @@ populateProjects();
 
 const populateProjectSelect = project => {
   const option = document.createElement('option');
-  option.setAttribute('value', project.name.toLowerCase());
+  option.setAttribute('value', project.id);
   option.innerHTML = project.name;
   $('.select-project').appendChild(option);
+};
+
+$('.add-palette-form').on('submit', function(e) {
+  e.preventDefault();
+  const projectId = $('.select-project').value;
+  const paletteName = $('.palette-name-input').value;
+  const colors = currentPalette.map(color => color.hexValue);
+  saveNewPalette(projectId, paletteName, colors);
+});
+
+const saveNewPalette = async (projectId, name, colors) => {
+  const url = `/api/v1/projects/${projectId}/palettes/${name}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(colors),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  // const newPalette = await response.json();
 };
