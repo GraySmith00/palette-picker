@@ -86,9 +86,15 @@ router.get('/palettes/:id', (req, res) => {
 
 // delete palette
 router.delete('/palettes/:palette_id', (req, res) => {
-  console.log(req.params.palette_id);
-  database('palettes')
-    .where('id', req.params.palette_id)
+  const foundPalette = database('palettes').where('id', req.params.palette_id);
+
+  if (!foundPalette) {
+    return res
+      .status(404)
+      .json({ error: `No palette was found with the id of ${req.params.id}` });
+  }
+
+  foundPalette
     .del()
     .then(palette => res.status(200).json({ id: palette[0] }))
     .catch(err => res.status(500).json({ err }));
