@@ -80,13 +80,24 @@ router.post('/:project_id/palettes/:name', (req, res) => {
 });
 
 // get individual palette
-router.get('/:id/palettes/:id', (req, res) => {
+router.get('/palettes/:id', (req, res) => {
   res.send('get individual palette');
 });
 
 // delete palette
-router.delete('/:id/palettes/:palette_id', (req, res) => {
-  res.send('delete palette');
+router.delete('/palettes/:palette_id', (req, res) => {
+  const foundPalette = database('palettes').where('id', req.params.palette_id);
+
+  if (!foundPalette) {
+    return res
+      .status(404)
+      .json({ error: `No palette was found with the id of ${req.params.id}` });
+  }
+
+  foundPalette
+    .del()
+    .then(palette => res.status(200).json({ id: palette[0] }))
+    .catch(err => res.status(500).json({ err }));
 });
 
 module.exports = router;

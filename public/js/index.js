@@ -114,7 +114,10 @@ const getAllProjectPalettes = async project_id => {
 const displayProjectPalettes = palettes => {
   return palettes
     .map(
-      palette => `<div class="palette">${renderProjectPalette(palette)}</div>`
+      palette =>
+        `<div class="palette" data-palette_id=${
+          palette.id
+        }>${renderProjectPalette(palette)}</div>`
     )
     .join('');
 };
@@ -184,8 +187,43 @@ const displayNewPalette = (newPalette, projectId) => {
   $(`[data-project_id="${projectId}"]`).appendChild(newPaletteDiv);
 };
 
-$('.palette').on('click', function(e) {
-  displayAsMainPalette();
+$('.file-tree').on('click', function(e) {
+  const { classList, parentNode } = e.target;
+  if (classList.contains('fa-trash-alt')) {
+    deletePalette(e);
+  } else if (classList.contains('palette-name')) {
+    const colorDivs = e.target.parentNode.children[2].children;
+    displayAsMainPalette(colorDivs);
+  } else if (parentNode.classList.contains('colors')) {
+    const colorDivs = e.target.parentNode.children;
+    displayAsMainPalette(colorDivs);
+  }
 });
 
-const displayAsMainPalette = () => {};
+const deletePalette = async e => {
+  e.target.parentNode.remove();
+  const palette_id = e.target.parentNode.dataset.palette_id;
+  const url = `/api/v1/projects/palettes/${palette_id}
+  `;
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+};
+
+const displayAsMainPalette = colorDivs => {
+  const newCurrentPalette = Array.from(colorDivs).map(child => {
+    const styleAttr = child.attributes[0].value;
+    const hexValue = styleAttr.slice(-7);
+    return {
+      hexValue,
+      locked: false
+    };
+  });
+
+  currentPalette = newCurrentPalette;
+  displayPalette(currentPalette);
+  return currentPalette;
+};
