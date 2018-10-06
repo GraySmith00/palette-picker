@@ -14,15 +14,20 @@ body {
 
 .file-tree {
   background-color: paleturquoise;
-  width: 16rem;
+  width: 26rem;
   height: 100vh;
   overflow: scroll;
 }
 
 .project-item {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   font-size: 1.5rem;
+}
+
+.project-title {
+  display: flex;
+  align-items: center;
 }
 
 .project-item i {
@@ -70,4 +75,18 @@ body {
 .color-4 {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.palette-name {
+  font-size: 0.9rem;
+}
+
+.colors {
+  display: flex;
+}
+
+.colors > * {
+  height: 20px;
+  width: 20px;
+  background-color: crimson;
 }
