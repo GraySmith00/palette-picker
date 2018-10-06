@@ -188,10 +188,16 @@ const displayNewPalette = (newPalette, projectId) => {
 };
 
 $('.file-tree').on('click', function(e) {
-  if (e.target.classList.contains('fa-trash-alt')) {
+  const { classList, parentNode } = e.target;
+  if (classList.contains('fa-trash-alt')) {
     deletePalette(e);
+  } else if (classList.contains('palette-name')) {
+    const colorDivs = e.target.parentNode.children[2].children;
+    displayAsMainPalette(colorDivs);
+  } else if (parentNode.classList.contains('colors')) {
+    const colorDivs = e.target.parentNode.children;
+    displayAsMainPalette(colorDivs);
   }
-  displayAsMainPalette();
 });
 
 const deletePalette = async e => {
@@ -207,4 +213,17 @@ const deletePalette = async e => {
   });
 };
 
-const displayAsMainPalette = () => {};
+const displayAsMainPalette = colorDivs => {
+  const newCurrentPalette = Array.from(colorDivs).map(child => {
+    const styleAttr = child.attributes[0].value;
+    const hexValue = styleAttr.slice(-7);
+    return {
+      hexValue,
+      locked: false
+    };
+  });
+
+  currentPalette = newCurrentPalette;
+  displayPalette(currentPalette);
+  return currentPalette;
+};
