@@ -114,7 +114,10 @@ const getAllProjectPalettes = async project_id => {
 const displayProjectPalettes = palettes => {
   return palettes
     .map(
-      palette => `<div class="palette">${renderProjectPalette(palette)}</div>`
+      palette =>
+        `<div class="palette" data-palette_id=${
+          palette.id
+        }>${renderProjectPalette(palette)}</div>`
     )
     .join('');
 };
@@ -184,8 +187,24 @@ const displayNewPalette = (newPalette, projectId) => {
   $(`[data-project_id="${projectId}"]`).appendChild(newPaletteDiv);
 };
 
-$('.palette').on('click', function(e) {
+$('.file-tree').on('click', function(e) {
+  if (e.target.classList.contains('fa-trash-alt')) {
+    deletePalette(e);
+  }
   displayAsMainPalette();
 });
+
+const deletePalette = async e => {
+  e.target.parentNode.remove();
+  const palette_id = e.target.parentNode.dataset.palette_id;
+  const url = `/api/v1/projects/palettes/${palette_id}
+  `;
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+};
 
 const displayAsMainPalette = () => {};
