@@ -64,7 +64,8 @@ $('.add-project-form').on('submit', async function(e) {
   e.preventDefault();
   const name = $('.project-name-input').value;
   const project = await createProject(name);
-  displayProject(project);
+  displayProject(project, []);
+  populateProjectSelect(project);
   this.reset();
 });
 
@@ -164,6 +165,7 @@ $('.add-palette-form').on('submit', async function(e) {
   }, {});
   const newPalette = await saveNewPalette(projectId, paletteName, colors);
   displayNewPalette(newPalette, projectId);
+  this.reset();
 });
 
 const saveNewPalette = async (projectId, name, colors) => {
