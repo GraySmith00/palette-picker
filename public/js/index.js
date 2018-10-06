@@ -85,13 +85,18 @@ const createProject = async name => {
   return project;
 };
 
-const displayProject = project => {
+const displayProject = (project, projectPalettes) => {
   const projectDiv = document.createElement('div');
   projectDiv.setAttribute('class', 'project-item');
-  projectDiv.setAttribute('data-index', project.id);
+  projectDiv.setAttribute('data-project_id', project.id);
   projectDiv.innerHTML = `
-    <i class="fas fa-plus"></i>
-    <p>${project.name}</p>
+    <div class="project-title">
+      <i class="fas fa-plus"></i>
+      <p>${project.name}</p>
+    </div>
+    <div class="palettes">
+      ${projectPalettes}
+    </div>
   `;
   $('.file-tree').prepend(projectDiv);
 };
@@ -102,10 +107,40 @@ const getAllProjects = async () => {
   return await response.json();
 };
 
+const getAllProjectPalettes = async project_id => {
+  const url = `/api/v1/projects/${project_id}/palettes`;
+  const response = await fetch(url);
+  const palettes = await response.json();
+  return palettes.length > 0 ? palettes : [];
+};
+
+const displayProjectPalettes = palettes => {
+  return palettes
+    .map(
+      palette => `<div class="palette">${renderProjectPalette(palette)}</div>`
+    )
+    .join('');
+};
+
+const renderProjectPalette = palette => {
+  return `
+    <p class="palette-name">${palette.name}</p>
+    <div class="colors">
+      <div style="background-color:${palette.color0}"></div>
+      <div style="background-color:${palette.color1}"></div>
+      <div style="background-color:${palette.color2}"></div>
+      <div style="background-color:${palette.color3}"></div>
+      <div style="background-color:${palette.color4}"></div>
+    </div>
+`;
+};
+
 const populateProjects = async () => {
   const projects = await getAllProjects();
-  projects.map(project => {
-    displayProject(project);
+  projects.map(async project => {
+    const palettes = await getAllProjectPalettes(project.id);
+    const projectPalettes = await displayProjectPalettes(palettes);
+    displayProject(project, projectPalettes);
     populateProjectSelect(project);
   });
 };
@@ -118,12 +153,16 @@ const populateProjectSelect = project => {
   $('.select-project').appendChild(option);
 };
 
-$('.add-palette-form').on('submit', function(e) {
+$('.add-palette-form').on('submit', async function(e) {
   e.preventDefault();
   const projectId = $('.select-project').value;
   const paletteName = $('.palette-name-input').value;
-  const colors = currentPalette.map(color => color.hexValue);
-  saveNewPalette(projectId, paletteName, colors);
+  const colors = currentPalette.reduce((colors, color, i) => {
+    colors[`color${i}`] = color.hexValue;
+    return colors;
+  }, {});
+  const newPalette = await saveNewPalette(projectId, paletteName, colors);
+  displayNewPalette(newPalette, projectId);
 });
 
 const saveNewPalette = async (projectId, name, colors) => {
@@ -135,5 +174,17 @@ const saveNewPalette = async (projectId, name, colors) => {
       'Content-Type': 'application/json'
     }
   });
-  // const newPalette = await response.json();
+
+  const id = await response.json();
+  const newPalette = { ...id, projectId, name, ...colors };
+  return newPalette;
+};
+
+const displayNewPalette = (newPalette, projectId) => {
+  const html = renderProjectPalette(newPalette);
+
+  const newPaletteDiv = document.createElement('div');
+  newPaletteDiv.innerHTML = html;
+
+  $(`[data-project_id="${projectId}"]`).appendChild(newPaletteDiv);
 };

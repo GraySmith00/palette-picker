@@ -36,18 +36,27 @@ router.get('/:id', (req, res) => {
 });
 
 // get all palettes in a project
-router.get('/:id/palettes', (req, res) => {
-  res.send('get all palettes');
+router.get('/:project_id/palettes', (req, res) => {
+  const { project_id } = req.params;
+  database('palettes')
+    .where('project_id', project_id)
+    .select()
+    .then(palettes => {
+      if (palettes.length) {
+        return res.status(200).json(palettes);
+      } else {
+        return res.status(200).json({
+          error: 'Could not find any palettes with that project id.'
+        });
+      }
+    })
+    .catch(err => res.send(500).json({ err }));
 });
 
 // post new palette to project
 router.post('/:project_id/palettes/:name', (req, res) => {
-  const colors = req.body.reduce((colors, color, i) => {
-    colors[`color${i}`] = color;
-    return colors;
-  }, {});
-  const newPalette = { ...colors, ...req.params };
-  console.log(newPalette);
+  const newPalette = { ...req.body, ...req.params };
+
   for (let requiredParam of [
     'project_id',
     'name',
