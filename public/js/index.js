@@ -21,7 +21,6 @@ displayPalette = palette => {
   });
 };
 displayPalette(currentPalette);
-
 $$('.main-palette-color').on('click', e => {
   toggleLock(e);
 });
@@ -70,9 +69,7 @@ $('.add-project-form').on('submit', async function(e) {
 });
 
 const createProject = async name => {
-  const newProject = {
-    name
-  };
+  const newProject = { name };
   const response = await fetch('/api/v1/projects', {
     method: 'POST',
     body: JSON.stringify(newProject),
@@ -125,6 +122,7 @@ const displayProjectPalettes = palettes => {
 const renderProjectPalette = palette => {
   return `
     <p class="palette-name">${palette.name}</p>
+    <i class="far fa-trash-alt"></i>
     <div class="colors">
       <div style="background-color:${palette.color0}"></div>
       <div style="background-color:${palette.color1}"></div>
@@ -174,7 +172,6 @@ const saveNewPalette = async (projectId, name, colors) => {
       'Content-Type': 'application/json'
     }
   });
-
   const id = await response.json();
   const newPalette = { ...id, projectId, name, ...colors };
   return newPalette;
@@ -182,9 +179,13 @@ const saveNewPalette = async (projectId, name, colors) => {
 
 const displayNewPalette = (newPalette, projectId) => {
   const html = renderProjectPalette(newPalette);
-
   const newPaletteDiv = document.createElement('div');
   newPaletteDiv.innerHTML = html;
-
   $(`[data-project_id="${projectId}"]`).appendChild(newPaletteDiv);
 };
+
+$('.palette').on('click', function(e) {
+  displayAsMainPalette();
+});
+
+const displayAsMainPalette = () => {};
