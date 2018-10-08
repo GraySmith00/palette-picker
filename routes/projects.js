@@ -24,6 +24,14 @@ router.post('/', (req, res) => {
       );
   }
 
+  const existingProject = database.select('name', project.name);
+
+  if (existingProject) {
+    return res
+      .status(409)
+      .send({ error: 'A project with that name already exists.' });
+  }
+
   database('projects')
     .insert(project, 'id')
     .then(project => res.status(201).json({ id: project[0] }))

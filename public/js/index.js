@@ -86,9 +86,15 @@ const createProject = async name => {
       'Content-Type': 'application/json'
     }
   });
-  const id = await response.json();
-  const project = { ...id, name };
-  return project;
+  if (response.status === 200) {
+    const id = await response.json();
+    const project = { ...id, name };
+    return project;
+  } else {
+    const error = await response.json();
+    alert(error.error);
+    $('.add-project-form').reset();
+  }
 };
 
 const displayProject = (project, projectPalettes) => {
