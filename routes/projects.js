@@ -27,7 +27,6 @@ router.post('/', (req, res) => {
   database('projects')
     .where('name', project.name)
     .then(response => {
-      console.log(response);
       if (response.length > 0) {
         return res
           .status(409)
@@ -39,12 +38,6 @@ router.post('/', (req, res) => {
           .catch(err => res.status(500).json({ error }));
       }
     });
-
-  // if (existingProject) {
-  //   return res
-  //     .status(409)
-  //     .send({ error: 'A project with that name already exists.' });
-  // }
 });
 
 // get all palettes in a project
