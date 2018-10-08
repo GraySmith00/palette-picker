@@ -64,6 +64,7 @@ input {
 
 .project-title p {
   margin: 0.3rem;
+  cursor: pointer;
 }
 
 .project-item i {
@@ -97,6 +98,7 @@ input {
 
 .palette-name {
   font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .colors {
