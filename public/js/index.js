@@ -79,7 +79,7 @@ const createProject = async name => {
       'Content-Type': 'application/json'
     }
   });
-  if (response.status === 200) {
+  if (response.status === 201) {
     const id = await response.json();
     const project = { ...id, name };
     return project;
