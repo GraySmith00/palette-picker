@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
     crossorigin="anonymous">
   <link rel="stylesheet" href="./css/styles.css">
@@ -22,17 +23,19 @@
       </section>
       <section class="user-input">
         <button class="generate-palette">Gen Palette</button>
-        <form class="add-project-form">
-          <input type="text" class="project-name-input">
-          <button>Save Project</button>
-        </form>
-        <form class="add-palette-form">
-          <select class="select-project">
-            <option value="">--Please select a project--</option>
-          </select>
-          <input type="text" class="palette-name-input">
-          <button>Save Palette</button>
-        </form>
+        <div class="user-forms">
+          <form class="add-project-form">
+            <input type="text" class="project-name-input" placeholder="New Project...">
+            <button>Save Project</button>
+          </form>
+          <form class="add-palette-form">
+            <input type="text" class="palette-name-input" placeholder="New Palette...">
+            <select class="select-project">
+              <option value="">--Please select a project--</option>
+            </select>
+            <button>Save Palette</button>
+          </form>
+        </div>
       </section>
     </main>
   </div>

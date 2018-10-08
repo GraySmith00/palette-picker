@@ -25,14 +25,19 @@ router.post('/', (req, res) => {
   }
 
   database('projects')
-    .insert(project, 'id')
-    .then(project => res.status(201).json({ id: project[0] }))
-    .catch(err => res.status(500).json({ error }));
-});
-
-// get individual project
-router.get('/:id', (req, res) => {
-  res.send(`project id: ${req.params.id}`);
+    .where('name', project.name)
+    .then(response => {
+      if (response.length > 0) {
+        return res
+          .status(409)
+          .send({ error: 'A project with that name already exists.' });
+      } else {
+        database('projects')
+          .insert(project, 'id')
+          .then(project => res.status(201).json({ id: project[0] }))
+          .catch(err => res.status(500).json({ error }));
+      }
+    });
 });
 
 // get all palettes in a project
@@ -77,11 +82,6 @@ router.post('/:project_id/palettes/:name', (req, res) => {
     .insert(newPalette, 'id')
     .then(palette => res.status(201).json({ id: palette[0] }))
     .catch(err => res.status(500).json({ err }));
-});
-
-// get individual palette
-router.get('/palettes/:id', (req, res) => {
-  res.send('get individual palette');
 });
 
 // delete palette

@@ -21,6 +21,7 @@ displayPalette = palette => {
   });
 };
 displayPalette(currentPalette);
+
 $$('.main-palette-color').on('click', e => {
   toggleLock(e);
 });
@@ -78,9 +79,15 @@ const createProject = async name => {
       'Content-Type': 'application/json'
     }
   });
-  const id = await response.json();
-  const project = { ...id, name };
-  return project;
+  if (response.status === 201) {
+    const id = await response.json();
+    const project = { ...id, name };
+    return project;
+  } else {
+    const error = await response.json();
+    alert(error.error);
+    $('.add-project-form').reset();
+  }
 };
 
 const displayProject = (project, projectPalettes) => {
@@ -90,9 +97,9 @@ const displayProject = (project, projectPalettes) => {
   projectDiv.innerHTML = `
     <div class="project-title">
       <i class="fas fa-plus"></i>
-      <p>${project.name}</p>
+      <p class="project-name">${project.name}</p>
     </div>
-    <div class="palettes">
+    <div class="palettes display-none">
       ${projectPalettes}
     </div>
   `;
@@ -126,7 +133,6 @@ const displayProjectPalettes = palettes => {
 const renderProjectPalette = palette => {
   return `
     <p class="palette-name">${palette.name}</p>
-    <i class="far fa-trash-alt"></i>
     <div class="colors">
       <div style="background-color:${palette.color0}"></div>
       <div style="background-color:${palette.color1}"></div>
@@ -134,6 +140,7 @@ const renderProjectPalette = palette => {
       <div style="background-color:${palette.color3}"></div>
       <div style="background-color:${palette.color4}"></div>
     </div>
+    <i class="far fa-trash-alt"></i>
 `;
 };
 
@@ -185,16 +192,20 @@ const saveNewPalette = async (projectId, name, colors) => {
 const displayNewPalette = (newPalette, projectId) => {
   const html = renderProjectPalette(newPalette);
   const newPaletteDiv = document.createElement('div');
+  newPaletteDiv.setAttribute('class', 'palette');
   newPaletteDiv.innerHTML = html;
-  $(`[data-project_id="${projectId}"]`).appendChild(newPaletteDiv);
+  $(`[data-project_id="${projectId}"]`).children[1].appendChild(newPaletteDiv);
 };
 
 $('.file-tree').on('click', function(e) {
   const { classList, parentNode } = e.target;
-  if (classList.contains('fa-trash-alt')) {
+
+  if (classList.contains('project-name')) {
+    parentNode.parentNode.children[1].classList.toggle('display-none');
+  } else if (classList.contains('fa-trash-alt')) {
     deletePalette(e);
   } else if (classList.contains('palette-name')) {
-    const colorDivs = e.target.parentNode.children[2].children;
+    const colorDivs = e.target.parentNode.children[1].children;
     displayAsMainPalette(colorDivs);
   } else if (parentNode.classList.contains('colors')) {
     const colorDivs = e.target.parentNode.children;
