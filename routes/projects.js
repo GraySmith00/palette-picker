@@ -35,6 +35,14 @@ router.get('/:id', (req, res) => {
   res.send(`project id: ${req.params.id}`);
 });
 
+// find project by name
+router.get('/:project_name', (req, res) => {
+  console.log(req.params.project_name);
+  database('projects')
+    .where('name', req.params.project_name)
+    .then(project => res.json(project));
+});
+
 // get all palettes in a project
 router.get('/:project_id/palettes', (req, res) => {
   const { project_id } = req.params;

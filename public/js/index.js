@@ -21,6 +21,7 @@ displayPalette = palette => {
   });
 };
 displayPalette(currentPalette);
+
 $$('.main-palette-color').on('click', e => {
   toggleLock(e);
 });
@@ -68,6 +69,13 @@ $('.add-project-form').on('submit', async function(e) {
   populateProjectSelect(project);
   this.reset();
 });
+
+const checkForExistingProject = async name => {
+  const url = `/api/v1/projects/${name}`;
+  const response = await fetch(url);
+  const project = await response.json();
+  console.log(project);
+};
 
 const createProject = async name => {
   const newProject = { name };
