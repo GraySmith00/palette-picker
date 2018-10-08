@@ -70,13 +70,6 @@ $('.add-project-form').on('submit', async function(e) {
   this.reset();
 });
 
-const checkForExistingProject = async name => {
-  const url = `/api/v1/projects/${name}`;
-  const response = await fetch(url);
-  const project = await response.json();
-  console.log(project);
-};
-
 const createProject = async name => {
   const newProject = { name };
   const response = await fetch('/api/v1/projects', {
